@@ -1,0 +1,91 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #0d6efd;
+  color: #fff;
+}
+
+.app-nav-button,
+.app-menu-button,
+.disclosure-button,
+.listbox-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.app-nav-button:hover,
+.app-menu-button:hover,
+.disclosure-button:hover,
+.listbox-button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.app-nav-panel,
+.app-menu-items,
+.tab-panel,
+.listbox-options {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.app-nav-panel a,
+.app-menu-items a,
+.listbox-option {
+  display: block;
+  padding: 0.5rem 0;
+  color: #fff;
+  text-decoration: none;
+}
+
+.app-menu-items a.active-link,
+.listbox-option:hover {
+  color: #0d6efd;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tab-list {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.tab-button {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.tab-button-selected {
+  background-color: #fff;
+  color: #0d6efd;
+}
+
+.tab-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.app-content {
+  flex: 1;
+  padding: 2rem;
+}
