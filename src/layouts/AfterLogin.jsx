@@ -4,7 +4,10 @@ import './MainLayout.css'
 
 function AfterLogin() {
   const [menuOpen, setMenuOpen] = useState(false)
-
+  let logout = () => {
+    localStorage.removeItem('token')
+    window.location.href = '/'
+  }
   return (
     <>
       <header className="app-header">
@@ -22,9 +25,10 @@ function AfterLogin() {
         </button>
 
         <nav className={`app-menu ${menuOpen ? 'open' : ''}`}>
-          <Link to="/">Home</Link>
+          <Link to="/home">Home</Link>
           <Link to="/products">Products</Link>
           <Link to="/cart">Cart</Link>
+          <Link onClick={logout}>Logout</Link>
         </nav>
       </header>
 

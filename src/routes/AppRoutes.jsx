@@ -9,10 +9,10 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
-        <Route path="products" element={<Products />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="register" element={<Register />} />
+        <Route path='/home' element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
   )

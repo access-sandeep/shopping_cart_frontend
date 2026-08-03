@@ -27,10 +27,11 @@ function* registerSaga(action) {
 }
 
 function* loginSaga(action) {
+  console.log('Login saga triggered with payload:', action.payload, api.post)
   try {
     const response = yield call(api.post, '/login', action.payload)
     if (response?.data) {
-      localStorage.setItem('user', JSON.stringify(response.data))
+      localStorage.setItem('token', JSON.stringify(response.data.token))
     }
     yield put(loginSuccess(response.data))
   } catch (error) {
@@ -42,7 +43,7 @@ function* loginSaga(action) {
 
 function* logoutSaga() {
   try {
-    localStorage.removeItem('user')
+    localStorage.removeItem('token')
     yield put(logoutSuccess())
   } catch (error) {
     const message = error.message || error.toString()

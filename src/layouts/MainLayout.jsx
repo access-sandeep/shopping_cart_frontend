@@ -4,7 +4,7 @@ import BeforeLogin from './BeforeLogin'
 
 function MainLayout() {
   let loggedInUser = ()=>{
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem('token');
     return user ? JSON.parse(user) : false;
   }
   return (

@@ -6,8 +6,8 @@ import Register from '../pages/Register'
 function BeforeLogin() {
   return (
     <Routes>
-        <Route index element={<LoginForm />} />
-        <Route path="register" element={<Register />} />
+        <Route path="/" element={<LoginForm />} />
+        <Route path="/register" element={<Register />} />
     </Routes>
   )
 }

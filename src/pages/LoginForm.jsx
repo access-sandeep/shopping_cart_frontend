@@ -1,15 +1,35 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import '../layouts/BeforeLogin.css'
+import { loginRequest } from '../features/auth/authSlice'
 
 function LoginForm() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { isSuccess } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    console.log('LoginForm useEffect triggered. isSuccess:', isSuccess);
+    if (isSuccess) {
+      window.location.href = '/home'  // Redirect to products page after successful login
+    }
+  }, [isSuccess, navigate])
+
   let handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted');
-    console.log('Email:', e.target.email.value);
-    console.log('Password:', e.target.password.value);
-    console.log('Remember me:', e.target.remember.checked);
-    // Handle form submission logic here
-    };
+    e.preventDefault()
+    let email = e.target.email.value
+    let password = e.target.password.value
+    let rememberMe = e.target.remember.checked
+
+    let payload = {
+      email: email,
+      password: password,
+    }
+
+    console.log('Payload and Remember me:', payload, rememberMe)
+    dispatch(loginRequest(payload))
+  }
 
   return (
     <div className="before-login-container">
