@@ -1,29 +1,60 @@
-import { useState } from 'react'
-import { Listbox } from '@headlessui/react'
+import { Tab } from '@headlessui/react'
+import './PageTheme.css'
 
-const categories = ['All Products', 'New Arrivals', 'On Sale']
+const categories = [
+  'All Products',
+  'iOS Mobiles',
+  'Android Mobiles',
+  'Smart TV',
+  'New Arrivals',
+  'On Sale',
+]
+
+const tabContent = {
+  'All Products': 'Browse all the items in our catalog, including newest releases and best-selling favorites.',
+  'iOS Mobiles':
+    'Sleek design. Powerful performance. Seamless iOS experience. Explore the latest iPhones and elevate your everyday with style and innovation.',
+  'Android Mobiles':
+    'Endless choices. Smart features. Ultimate flexibility. Discover Android mobiles that match your lifestyle with powerful performance and innovative designs.',
+  'Smart TV':
+    'Big screen. Brilliant picture. Smarter entertainment. Explore Smart TVs with streaming, apps, and voice control—all in one sleek package.',
+  'New Arrivals': 'Explore the latest additions to our store, fresh from our newest product drops.',
+  'On Sale': 'Save on popular items with current discounts and limited-time offers.',
+}
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 function Products() {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0])
-
   return (
-    <section>
-      <h2>Our Products</h2>
-      <Listbox value={selectedCategory} onChange={setSelectedCategory}>
-        <Listbox.Button className="listbox-button">{selectedCategory}</Listbox.Button>
-        <Listbox.Options className="listbox-options">
+    <section className="page-card">
+      <h2 className="page-title">Our Products</h2>
+      <p className="page-description">Shop the latest items in our catalog and filter by category.</p>
+      <Tab.Group>
+        <Tab.List className="tab-list">
           {categories.map((category) => (
-            <Listbox.Option
+            <Tab
               key={category}
-              value={category}
-              className="listbox-option"
+              className={({ selected }) =>
+                classNames(
+                  'tab-button',
+                  selected ? 'tab-button-selected' : 'tab-button-default'
+                )
+              }
             >
               {category}
-            </Listbox.Option>
+            </Tab>
           ))}
-        </Listbox.Options>
-      </Listbox>
-      <p className="mt-4">Selected category: {selectedCategory}</p>
+        </Tab.List>
+        <Tab.Panels>
+          {categories.map((category) => (
+            <Tab.Panel key={category} className="tab-panel">
+              <p>{tabContent[category]}</p>
+            </Tab.Panel>
+          ))}
+        </Tab.Panels>
+      </Tab.Group>
     </section>
   )
 }
