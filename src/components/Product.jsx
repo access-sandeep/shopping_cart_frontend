@@ -29,21 +29,21 @@ const Product = ({ product, onAddToCart }) => {
     <div className="product-card">
       <div className="product-details">
         <h3>{product_name}</h3>
-        <p>{description}</p>
+        {/* <p>{description}</p> */}
 
         <div className="product-meta">
-          <div>
+          {/* <div>
             <span>SKU</span>
             <strong>{sku}</strong>
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             <span>Brand</span>
             <strong>{brand_name}</strong>
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             <span>Category</span>
             <strong>{category_name}</strong>
-          </div>
+          </div> */}
           <div>
             <span>Weight</span>
             <strong>{weight} kg</strong>

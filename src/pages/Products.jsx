@@ -3,28 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Tab } from '@headlessui/react'
 import Product from '../components/Product'
 import { fetchProductsRequest } from '../features/products/productsSlice'
+import { fetchCategoriesRequest } from '../features/categories/categoriesSlice'
 import './PageTheme.css'
-
-const categories = [
-  'All Products',
-  'iOS Mobiles',
-  'Android Mobiles',
-  'Smart TV',
-  'New Arrivals',
-  'On Sale',
-]
-
-const tabContent = {
-  'All Products': 'Browse all the items in our catalog, including newest releases and best-selling favorites.',
-  'iOS Mobiles':
-    'Sleek design. Powerful performance. Seamless iOS experience. Explore the latest iPhones and elevate your everyday with style and innovation.',
-  'Android Mobiles':
-    'Endless choices. Smart features. Ultimate flexibility. Discover Android mobiles that match your lifestyle with powerful performance and innovative designs.',
-  'Smart TV':
-    'Big screen. Brilliant picture. Smarter entertainment. Explore Smart TVs with streaming, apps, and voice control—all in one sleek package.',
-  'New Arrivals': 'Explore the latest additions to our store, fresh from our newest product drops.',
-  'On Sale': 'Save on popular items with current discounts and limited-time offers.',
-}
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -33,23 +13,26 @@ function classNames(...classes) {
 function Products() {
   const dispatch = useDispatch()
   const { products, isLoading, isError, message } = useSelector((state) => state.products)
+  const { categories, isLoading: categoriesLoading, isError: categoriesError, message: categoriesMessage } = useSelector((state) => state.categories)
 
   useEffect(() => {
+    dispatch(fetchCategoriesRequest())
     dispatch(fetchProductsRequest())
   }, [dispatch])
 
   const matchesCategory = (product, category) => {
-    const productCategory = product?.category?.category_name
-    if (category === 'Android Mobiles' && productCategory === 'Android Mobiles') {
-      return true
-    }
-    return productCategory === category
+    const product_category_id = product?.category_id;
+    const category_category_id = category?.category_id;
+    return product_category_id === category_category_id;
   }
 
   return (
     <section className="page-card">
       <h2 className="page-title">Our Products</h2>
       <p className="page-description">Shop the latest items in our catalog and filter by category.</p>
+
+      {categoriesLoading && <p className="tab-content">Loading categories...</p>}
+      {categoriesError && <p className="tab-content">{categoriesMessage || 'Unable to load categories.'}</p>}
 
       {isLoading && <p className="tab-content">Loading products...</p>}
       {isError && <p className="tab-content">{message || 'Unable to load products.'}</p>}
@@ -58,7 +41,7 @@ function Products() {
         <Tab.List className="tab-list">
           {categories.map((category) => (
             <Tab
-              key={category}
+              key={category.category_id}
               className={({ selected }) =>
                 classNames(
                   'tab-button',
@@ -66,23 +49,28 @@ function Products() {
                 )
               }
             >
-              {category}
+              {category.category_name}
             </Tab>
           ))}
         </Tab.List>
         <Tab.Panels>
-          {categories.map((category) => (
-            <Tab.Panel key={category} className="tab-panel">
-              <p className="tab-content">{tabContent[category]}</p>
-              <div className="product-grid">
-                {products
-                  .filter((product) => matchesCategory(product, category))
-                  .map((product) => (
-                    <Product key={product.product_id} product={product} />
-                  ))}
-              </div>
-            </Tab.Panel>
-          ))}
+          {categories.map((category) => {
+            const filteredProducts = products.filter((product) => matchesCategory(product, category))
+
+            return (
+              <Tab.Panel key={category.category_id} className="tab-panel">
+                <div className="product-grid">
+                  {filteredProducts.length === 0 ? (
+                    <div>There is no product in this category.</div>
+                  ) : (
+                    filteredProducts.map((product) => (
+                      <Product key={product.product_id} product={product} />
+                    ))
+                  )}
+                </div>
+              </Tab.Panel>
+            )
+          })}
         </Tab.Panels>
       </Tab.Group>
     </section>

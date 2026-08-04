@@ -118,7 +118,21 @@
   color: #0f172a;
 }
 
+.product-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .product-card {
+  width: 100%;
+  box-sizing: border-box;
   margin-top: 1rem;
   padding: 1.25rem;
   border-radius: 1rem;
