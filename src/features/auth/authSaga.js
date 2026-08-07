@@ -31,7 +31,13 @@ function* loginSaga(action) {
   try {
     const response = yield call(api.post, '/login', action.payload)
     if (response?.data) {
+      const userData = yield call(api.get, '/loggedin/user', {
+        headers: {
+          Authorization: `Bearer ${response.data.token}`,
+        },
+      });
       localStorage.setItem('token', JSON.stringify(response.data.token))
+      localStorage.setItem('user', JSON.stringify(userData.data))
     }
     yield put(loginSuccess(response.data))
   } catch (error) {

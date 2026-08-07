@@ -55,7 +55,7 @@ const Product = ({ product, onAddToCart }) => {
             <span className="product-price">{formatCurrency(price)}</span>
             <span className="product-discount">{formatCurrency(discount_price)}</span>
           </div>
-          <button type="button" onClick={() => onAddToCart?.(product)}>
+          <button type="button" onClick={() => onAddToCart(product)}>
             Add to Cart
           </button>
         </div>

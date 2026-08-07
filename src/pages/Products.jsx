@@ -5,6 +5,7 @@ import Product from '../components/Product'
 import { fetchProductsRequest } from '../features/products/productsSlice'
 import { fetchCategoriesRequest } from '../features/categories/categoriesSlice'
 import './PageTheme.css'
+import { get } from 'lodash'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -24,6 +25,23 @@ function Products() {
     const product_category_id = product?.category_id;
     const category_category_id = category?.category_id;
     return product_category_id === category_category_id;
+  }
+
+  function onAddToCart(product) {
+    // Implement the logic to add the product to the cart
+    let cart_id = fetchCartIdForCurrentUser();
+    let quantity = 1;
+    console.log('Product id:', get(product, 'product_id', null));
+    console.log('Cart id:', cart_id);
+    console.log('Quantity:', quantity);
+  }
+
+  function fetchCartIdForCurrentUser() {
+    let user_id = get(JSON.parse(localStorage.getItem('user')), 'user_id', 0)
+    console.log('Fetching cart id for user id:', user_id);
+    // call reducer to fetch cart id for user
+    let cart_id = 0; // Replace with actual logic to fetch cart id for the user
+    return cart_id;
   }
 
   return (
@@ -64,7 +82,7 @@ function Products() {
                     <div>There is no product in this category.</div>
                   ) : (
                     filteredProducts.map((product) => (
-                      <Product key={product.product_id} product={product} />
+                      <Product key={product.product_id} product={product} onAddToCart={onAddToCart} />
                     ))
                   )}
                 </div>
