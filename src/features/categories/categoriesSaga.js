@@ -8,7 +8,6 @@ import {
 
 function* fetchCategoriesSaga() {
   try {
-    console.log('Fetching categories...')
     const response = yield call(api.get, '/categories')
     yield put(fetchCategoriesSuccess(response.data))
   } catch (error) {

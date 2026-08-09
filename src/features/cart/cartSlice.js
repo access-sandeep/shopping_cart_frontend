@@ -20,7 +20,6 @@ const cartSlice = createSlice({
     fetchCartIdForCurrentUserSuccess: (state, action) => {
       state.isLoading = false
       state.userDetails = get(action, 'payload', null);
-      console.log('Fetched cart id for current user:', state);
     },
     fetchCartIdForCurrentUserFailure: (state, action) => {
       state.isLoading = false
