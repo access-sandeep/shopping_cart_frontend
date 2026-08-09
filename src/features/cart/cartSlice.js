@@ -5,13 +5,41 @@ const initialState = {
   items: [],
   isLoading: false,
   isError: false,
-  message: '',
+  message: ''
 }
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    fetchCartIdForCurrentUser: (state) => {
+      state.isLoading = true
+      state.isError = false
+      state.message = ''
+    },
+    fetchCartIdForCurrentUserSuccess: (state, action) => {
+      state.isLoading = false
+      state.userDetails = get(action, 'payload', null);
+      console.log('Fetched cart id for current user:', state);
+    },
+    fetchCartIdForCurrentUserFailure: (state, action) => {
+      state.isLoading = false
+      state.isError = true
+      state.message = action.payload
+    },
+    fetchCartItemsRequest: (state) => {
+      state.isLoading = true
+      state.isError = false
+      state.message = ''
+    },
+    fetchCartItemsSuccess: (state, action) => {
+      state.isLoading = false
+    },
+    fetchCartItemsFailure: (state, action) => {
+      state.isLoading = false
+      state.isError = true
+      state.message = action.payload
+    },
     fetchCartRequest: (state) => {
       state.isLoading = true
       state.isError = false
@@ -104,6 +132,12 @@ const cartSlice = createSlice({
 })
 
 export const {
+  fetchCartIdForCurrentUser,
+  fetchCartIdForCurrentUserSuccess,
+  fetchCartIdForCurrentUserFailure,
+  fetchCartItemsRequest,
+  fetchCartItemsSuccess,
+  fetchCartItemsFailure,
   fetchCartRequest,
   fetchCartSuccess,
   fetchCartFailure,

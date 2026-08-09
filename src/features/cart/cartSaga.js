@@ -1,6 +1,9 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import api from '../../services/api.js'
 import {
+  fetchCartIdForCurrentUser,
+  fetchCartIdForCurrentUserSuccess,
+  fetchCartIdForCurrentUserFailure,
   fetchCartRequest,
   fetchCartSuccess,
   fetchCartFailure,
@@ -34,6 +37,15 @@ function removeItemApi(itemId) {
 
 function updateQuantityApi(itemId, quantity) {
   return api.put(`/cart/items/${itemId}`, { quantity });
+}
+
+function* fetchCartIdForCurrentUserSaga() {
+  try {
+    const response = yield call(api.get, '/loggedin/user');
+    yield put(fetchCartIdForCurrentUserSuccess(response.data));
+  } catch (error) {
+    yield put(fetchCartIdForCurrentUserFailure(error.message || 'Failed to fetch cart id'));
+  }
 }
 
 function* fetchCartSaga() {
@@ -82,8 +94,9 @@ function* updateQuantitySaga(action) {
   }
 }
 
-export function* watchCartSagas() {
+export default function* watchCartSagas() {
   yield all([
+    takeLatest(fetchCartIdForCurrentUser.type, fetchCartIdForCurrentUserSaga),
     takeLatest(fetchCartRequest.type, fetchCartSaga),
     takeLatest(fetchCartItemsRequest.type, fetchCartItemsSaga),
     takeLatest(addItemRequest.type, addItemSaga),
