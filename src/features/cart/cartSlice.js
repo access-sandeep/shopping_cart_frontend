@@ -56,7 +56,8 @@ const cartSlice = createSlice({
       state.isError = true
       state.message = action.payload
     },
-    addItemRequest: (state) => {
+    addItemRequest: (state, action) => {
+      console.log('addItemRequest action payload:', action.payload);
       state.isLoading = true
       state.isError = false
       state.message = ''

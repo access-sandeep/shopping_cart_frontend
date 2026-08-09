@@ -28,7 +28,7 @@ function fetchCartItemsApi() {
 }
 
 function addItemApi(item) {
-  return api.post('/cart/items', item);
+  return api.post('/cart_item/add', item);
 }
 
 function removeItemApi(itemId) {

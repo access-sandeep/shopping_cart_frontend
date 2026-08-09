@@ -4,7 +4,7 @@ import { Tab } from '@headlessui/react'
 import Product from '../components/Product'
 import { fetchProductsRequest } from '../features/products/productsSlice'
 import { fetchCategoriesRequest } from '../features/categories/categoriesSlice'
-import { fetchCartIdForCurrentUser } from '../features/cart/cartSlice'
+import { fetchCartIdForCurrentUser, addItemRequest } from '../features/cart/cartSlice'
 import './PageTheme.css'
 import { get } from 'lodash'
 
@@ -32,6 +32,7 @@ function Products() {
 
   function onAddToCart(product) {
     // Implement the logic to add the product to the cart
+    dispatch(addItemRequest({ cart_id: get(userDetails, 'cart.cart_id', null), product_id: get(product, 'product_id', null), quantity: 1 }));
     let cart = get(userDetails, 'cart', null);
     let quantity = 1;
     console.log('Product id:', get(product, 'product_id', null));
