@@ -1,5 +1,6 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import api from '../../services/api.js'
+import { get } from 'lodash';
 import {
   fetchCartIdForCurrentUser,
   fetchCartIdForCurrentUserSuccess,
@@ -41,7 +42,13 @@ function updateQuantityApi(itemId, quantity) {
 
 function* fetchCartIdForCurrentUserSaga() {
   try {
-    const response = yield call(api.get, '/loggedin/user');
+    let response = yield call(api.get, '/loggedin/user');
+    let isCartIdPresent = response.data?.cart;
+    if (!isCartIdPresent) {
+      let user_id = get(JSON.parse(localStorage.getItem('user')), 'user_id', null);
+      yield call(api.post, `/shopping_cart/add`, { user_id });
+      response = yield call(api.get, '/loggedin/user');
+    }
     yield put(fetchCartIdForCurrentUserSuccess(response.data));
   } catch (error) {
     yield put(fetchCartIdForCurrentUserFailure(error.message || 'Failed to fetch cart id'));
