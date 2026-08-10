@@ -32,9 +32,14 @@ const cartSlice = createSlice({
       state.message = ''
     },
     fetchCartItemsSuccess: (state, action) => {
+      console.log('fetchCartItemsSuccess action payload:', action.payload);
+      state.isError = false
+      state.message = ''
+      state.items = Array.isArray(action.payload) ? action.payload : []
       state.isLoading = false
     },
     fetchCartItemsFailure: (state, action) => {
+      state.items = []
       state.isLoading = false
       state.isError = true
       state.message = action.payload

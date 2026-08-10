@@ -9,6 +9,8 @@ import {
   fetchCartSuccess,
   fetchCartFailure,
   fetchCartItemsRequest,
+  fetchCartItemsSuccess,
+  fetchCartItemsFailure,
   addItemRequest,
   addItemSuccess,
   addItemFailure,
@@ -25,7 +27,7 @@ function fetchCartApi() {
 }
 
 function fetchCartItemsApi() {
-  return api.get('/cart_items');
+  return api.get('/cart_item/products/7');
 }
 
 function addItemApi(item) {
@@ -67,9 +69,10 @@ function* fetchCartSaga() {
 function* fetchCartItemsSaga() {
   try {
     const response = yield call(fetchCartItemsApi);
-    yield put(fetchCartSuccess(response.data));
+    console.log('fetchCartItemsSaga response:', response.data);
+    yield put(fetchCartItemsSuccess(response.data));
   } catch (error) {
-    yield put(fetchCartFailure(error.message || 'Failed to load cart items'));
+    yield put(fetchCartItemsFailure(error.message || 'Failed to load cart items'));
   }
 }
 
