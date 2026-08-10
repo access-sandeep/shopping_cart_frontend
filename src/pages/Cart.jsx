@@ -12,6 +12,13 @@ function Cart() {
   const dispatch = useDispatch()
   const { items, isLoading, isError, message } = useSelector((state) => state.cart)
 
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 2,
+    }).format(Number(value || 0))
+
   useEffect(() => {
     dispatch(fetchCartItemsRequest())
   }, [dispatch])
@@ -22,26 +29,26 @@ function Cart() {
   )
   const totalQuantity = items?.reduce((sum, item) => sum + (item.quantity || 0), 0)
 
-  const handleQuantityChange = (item, newQuantity) => {
-    if (newQuantity < 1) return
-    dispatch(
-      updateQuantityRequest({
-        itemId: item.cart_item_id,
-        quantity: newQuantity,
-      })
-    )
+  const handleQuantityChange = (event, item, newQuantity) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (newQuantity < 1) {
+      dispatch(removeItemRequest(item.cart_item_id))
+      return
+    } else {
+      dispatch(
+        updateQuantityRequest({
+          itemId: item.cart_item_id,
+          quantity: newQuantity,
+        })
+      )
+    }
   }
 
-  const handleRemoveItem = (item) => {
+  const handleRemoveItem = (event, item) => {
+    event.preventDefault()
+    event.stopPropagation()
     dispatch(removeItemRequest(item.cart_item_id))
-  }
-
-  if (isLoading) {
-    return <p className="tab-content">Loading cart items...</p>
-  }
-
-  if (isError) {
-    return <p className="tab-content">{message || 'Unable to load cart items.'}</p>
   }
 
   return (
@@ -58,6 +65,9 @@ function Cart() {
         </Link>
       </div>
 
+      {isError && <p className="cart-status cart-status-error">{message || 'Unable to load cart items.'}</p>}
+      {isLoading && <p className="cart-status">Updating your cart...</p>}
+
       {items && items.length > 0 ? (
         <div className="cart-grid">
           <section className="tab-panel cart-items-panel">
@@ -68,11 +78,11 @@ function Cart() {
                   <div className="cart-item-main">
                     <div>
                       <h4>{item.product?.product_name}</h4>
-                      <p className="cart-item-meta">Unit price: ₹{item.product?.price?.toFixed(2) ?? '0.00'}</p>
+                      <p className="cart-item-meta">Unit price: {formatCurrency(item.product?.price)}</p>
                     </div>
                     <div className="cart-item-price">
                       <span>Item total</span>
-                      <strong>₹{((item.quantity || 0) * (item.product?.price || 0)).toFixed(2)}</strong>
+                      <strong>{formatCurrency((item.quantity || 0) * (item.product?.price || 0))}</strong>
                     </div>
                   </div>
 
@@ -81,7 +91,7 @@ function Cart() {
                       <button
                         type="button"
                         className="quantity-button"
-                        onClick={() => handleQuantityChange(item, item.quantity - 1)}
+                        onClick={(event) => handleQuantityChange(event, item, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                       >
                         −
@@ -90,7 +100,7 @@ function Cart() {
                       <button
                         type="button"
                         className="quantity-button"
-                        onClick={() => handleQuantityChange(item, item.quantity + 1)}
+                        onClick={(event) => handleQuantityChange(event, item, item.quantity + 1)}
                       >
                         +
                       </button>
@@ -98,7 +108,7 @@ function Cart() {
                     <button
                       type="button"
                       className="text-button"
-                      onClick={() => handleRemoveItem(item)}
+                      onClick={(event) => handleRemoveItem(event, item)}
                     >
                       Remove
                     </button>
@@ -116,11 +126,11 @@ function Cart() {
             </div>
             <div className="summary-row">
               <span>Subtotal</span>
-              <strong>₹{subtotal.toFixed(2)}</strong>
+              <strong>{formatCurrency(subtotal)}</strong>
             </div>
             <div className="summary-row total-row">
               <span>Total</span>
-              <strong>₹{subtotal.toFixed(2)}</strong>
+              <strong>{formatCurrency(subtotal)}</strong>
             </div>
             <button type="button" className="checkout-button">
               Proceed to Checkout

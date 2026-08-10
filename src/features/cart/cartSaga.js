@@ -27,7 +27,8 @@ function fetchCartApi() {
 }
 
 function fetchCartItemsApi() {
-  return api.get('/cart_item/products/7');
+  let cart_id = get(JSON.parse(localStorage.getItem('user')), 'cart.cart_id', null);
+  return api.get(`/cart_item/products/${cart_id}`);
 }
 
 function addItemApi(item) {
@@ -35,11 +36,11 @@ function addItemApi(item) {
 }
 
 function removeItemApi(itemId) {
-  return api.delete(`/cart/items/${itemId}`);
+  return api.delete(`/cart_item/delete/${itemId}`);
 }
 
 function updateQuantityApi(itemId, quantity) {
-  return api.put(`/cart/items/${itemId}`, { quantity });
+  return api.put(`/cart_item/update_quantity/${itemId}`, { quantity });
 }
 
 function* fetchCartIdForCurrentUserSaga() {
@@ -89,6 +90,7 @@ function* removeItemSaga(action) {
   try {
     yield call(removeItemApi, action.payload);
     yield put(removeItemSuccess(action.payload));
+    yield put(fetchCartItemsRequest());
   } catch (error) {
     yield put(removeItemFailure(error.message || 'Failed to remove item'));
   }
@@ -99,6 +101,7 @@ function* updateQuantitySaga(action) {
     const { itemId, quantity } = action.payload;
     const response = yield call(updateQuantityApi, itemId, quantity);
     yield put(updateQuantitySuccess(response.data));
+    yield put(fetchCartItemsRequest());
   } catch (error) {
     yield put(updateQuantityFailure(error.message || 'Failed to update quantity'));
   }

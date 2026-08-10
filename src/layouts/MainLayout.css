@@ -67,6 +67,30 @@
   text-decoration: none;
 }
 
+.cart-menu-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-right: 1.1rem;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -0.45rem;
+  right: -0.55rem;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.32rem;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.15rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
 .app-nav-panel,
 .app-menu-items,
 .tab-panel,
@@ -132,6 +156,15 @@
     display: block;
     padding: 0.75rem 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .cart-menu-link {
+    display: inline-flex;
+  }
+
+  .cart-badge {
+    top: 0.35rem;
+    right: -1.35rem;
   }
 }
 
