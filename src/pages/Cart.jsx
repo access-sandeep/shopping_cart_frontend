@@ -1,21 +1,14 @@
-import { Disclosure } from '@headlessui/react'
+import './PageTheme.css'
+import { Link } from 'react-router-dom'
 
 function Cart() {
   return (
-    <section>
-      <h2>Your Cart</h2>
-      <Disclosure>
-        {({ open }) => (
-          <>
-            <Disclosure.Button className="disclosure-button">
-              {open ? 'Hide cart details' : 'Show cart details'}
-            </Disclosure.Button>
-            <Disclosure.Panel className="disclosure-panel">
-              <p>Your selected items will appear here.</p>
-            </Disclosure.Panel>
-          </>
-        )}
-      </Disclosure>
+    <section className="page-card">
+      <h2 className="page-title">Your Cart</h2>
+      <p className="page-description">Review selected items, adjust quantities, and prepare for checkout.</p>
+      <div className="tab-panel">
+        <p>Your cart is empty. <Link to="/products">Continue shopping</Link>.</p>
+      </div>
     </section>
   )
 }
