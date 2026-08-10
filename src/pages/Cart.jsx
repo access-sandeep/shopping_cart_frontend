@@ -68,11 +68,11 @@ function Cart() {
                   <div className="cart-item-main">
                     <div>
                       <h4>{item.product?.product_name}</h4>
-                      <p className="cart-item-meta">Unit price: ${item.product?.price?.toFixed(2) ?? '0.00'}</p>
+                      <p className="cart-item-meta">Unit price: ₹{item.product?.price?.toFixed(2) ?? '0.00'}</p>
                     </div>
                     <div className="cart-item-price">
                       <span>Item total</span>
-                      <strong>${((item.quantity || 0) * (item.product?.price || 0)).toFixed(2)}</strong>
+                      <strong>₹{((item.quantity || 0) * (item.product?.price || 0)).toFixed(2)}</strong>
                     </div>
                   </div>
 
@@ -116,11 +116,11 @@ function Cart() {
             </div>
             <div className="summary-row">
               <span>Subtotal</span>
-              <strong>${subtotal.toFixed(2)}</strong>
+              <strong>₹{subtotal.toFixed(2)}</strong>
             </div>
             <div className="summary-row total-row">
               <span>Total</span>
-              <strong>${subtotal.toFixed(2)}</strong>
+              <strong>₹{subtotal.toFixed(2)}</strong>
             </div>
             <button type="button" className="checkout-button">
               Proceed to Checkout
