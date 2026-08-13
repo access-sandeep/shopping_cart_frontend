@@ -132,9 +132,9 @@ function Cart() {
               <span>Total</span>
               <strong>{formatCurrency(subtotal)}</strong>
             </div>
-            <button type="button" className="checkout-button">
+            <Link to="/checkout" className="checkout-button" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>
               Proceed to Checkout
-            </button>
+            </Link>
           </aside>
         </div>
       ) : (
