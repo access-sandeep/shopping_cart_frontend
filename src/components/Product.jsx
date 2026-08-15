@@ -19,9 +19,9 @@ const Product = ({ product, onAddToCart }) => {
   const { brand_name } = product.brand || {};
 
   const formatCurrency = (value) =>
-    new Intl.NumberFormat('en-US', {
+    new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
       maximumFractionDigits: 2,
     }).format(value);
 

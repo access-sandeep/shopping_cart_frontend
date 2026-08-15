@@ -1,14 +1,147 @@
+import { useEffect } from 'react'
 import './PageTheme.css'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  fetchCartItemsRequest,
+  updateQuantityRequest,
+  removeItemRequest,
+} from '../features/cart/cartSlice'
 
 function Cart() {
+  const dispatch = useDispatch()
+  const { items, isLoading, isError, message } = useSelector((state) => state.cart)
+
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 2,
+    }).format(Number(value || 0))
+
+  useEffect(() => {
+    dispatch(fetchCartItemsRequest())
+  }, [dispatch])
+
+  const subtotal = items?.reduce(
+    (sum, item) => sum + (item.quantity || 0) * (item.product?.price || 0),
+    0
+  )
+  const totalQuantity = items?.reduce((sum, item) => sum + (item.quantity || 0), 0)
+
+  const handleQuantityChange = (event, item, newQuantity) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (newQuantity < 1) {
+      dispatch(removeItemRequest(item.cart_item_id))
+      return
+    } else {
+      dispatch(
+        updateQuantityRequest({
+          itemId: item.cart_item_id,
+          quantity: newQuantity,
+        })
+      )
+    }
+  }
+
+  const handleRemoveItem = (event, item) => {
+    event.preventDefault()
+    event.stopPropagation()
+    dispatch(removeItemRequest(item.cart_item_id))
+  }
+
   return (
     <section className="page-card">
-      <h2 className="page-title">Your Cart</h2>
-      <p className="page-description">Review selected items, adjust quantities, and prepare for checkout.</p>
-      <div className="tab-panel">
-        <p>Your cart is empty. <Link to="/products">Continue shopping</Link>.</p>
+      <div className="page-heading">
+        <div>
+          <h2 className="page-title">Your Cart</h2>
+          <p className="page-description">
+            Review selected items, adjust quantities, and prepare for checkout.
+          </p>
+        </div>
+        <Link className="button button-secondary" to="/products">
+          Continue shopping
+        </Link>
       </div>
+
+      {isError && <p className="cart-status cart-status-error">{message || 'Unable to load cart items.'}</p>}
+      {isLoading && <p className="cart-status">Updating your cart...</p>}
+
+      {items && items.length > 0 ? (
+        <div className="cart-grid">
+          <section className="tab-panel cart-items-panel">
+            <h3 className="section-heading">Items in your cart</h3>
+            <ul className="cart-items-list">
+              {items.map((item) => (
+                <li key={item.cart_item_id} className="cart-item">
+                  <div className="cart-item-main">
+                    <div>
+                      <h4>{item.product?.product_name}</h4>
+                      <p className="cart-item-meta">Unit price: {formatCurrency(item.product?.price)}</p>
+                    </div>
+                    <div className="cart-item-price">
+                      <span>Item total</span>
+                      <strong>{formatCurrency((item.quantity || 0) * (item.product?.price || 0))}</strong>
+                    </div>
+                  </div>
+
+                  <div className="cart-item-controls">
+                    <div className="quantity-control">
+                      <button
+                        type="button"
+                        className="quantity-button"
+                        onClick={(event) => handleQuantityChange(event, item, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
+                        −
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        type="button"
+                        className="quantity-button"
+                        onClick={(event) => handleQuantityChange(event, item, item.quantity + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      className="text-button"
+                      onClick={(event) => handleRemoveItem(event, item)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <aside className="cart-summary">
+            <h3 className="section-heading">Order summary</h3>
+            <div className="summary-row">
+              <span>Items</span>
+              <strong>{totalQuantity}</strong>
+            </div>
+            <div className="summary-row">
+              <span>Subtotal</span>
+              <strong>{formatCurrency(subtotal)}</strong>
+            </div>
+            <div className="summary-row total-row">
+              <span>Total</span>
+              <strong>{formatCurrency(subtotal)}</strong>
+            </div>
+            <Link to="/checkout" className="checkout-button" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>
+              Proceed to Checkout
+            </Link>
+          </aside>
+        </div>
+      ) : (
+        <div className="tab-panel">
+          <p>Your cart is empty. <Link to="/products">Continue shopping</Link>.</p>
+        </div>
+      )}
     </section>
   )
 }

@@ -9,6 +9,8 @@ import {
   fetchCartSuccess,
   fetchCartFailure,
   fetchCartItemsRequest,
+  fetchCartItemsSuccess,
+  fetchCartItemsFailure,
   addItemRequest,
   addItemSuccess,
   addItemFailure,
@@ -25,7 +27,8 @@ function fetchCartApi() {
 }
 
 function fetchCartItemsApi() {
-  return api.get('/cart_items');
+  let cart_id = get(JSON.parse(localStorage.getItem('user')), 'cart.cart_id', null);
+  return api.get(`/cart_item/products/${cart_id}`);
 }
 
 function addItemApi(item) {
@@ -33,11 +36,11 @@ function addItemApi(item) {
 }
 
 function removeItemApi(itemId) {
-  return api.delete(`/cart/items/${itemId}`);
+  return api.delete(`/cart_item/delete/${itemId}`);
 }
 
 function updateQuantityApi(itemId, quantity) {
-  return api.put(`/cart/items/${itemId}`, { quantity });
+  return api.put(`/cart_item/update_quantity/${itemId}`, { quantity });
 }
 
 function* fetchCartIdForCurrentUserSaga() {
@@ -67,9 +70,10 @@ function* fetchCartSaga() {
 function* fetchCartItemsSaga() {
   try {
     const response = yield call(fetchCartItemsApi);
-    yield put(fetchCartSuccess(response.data));
+    console.log('fetchCartItemsSaga response:', response.data);
+    yield put(fetchCartItemsSuccess(response.data));
   } catch (error) {
-    yield put(fetchCartFailure(error.message || 'Failed to load cart items'));
+    yield put(fetchCartItemsFailure(error.message || 'Failed to load cart items'));
   }
 }
 
@@ -86,6 +90,7 @@ function* removeItemSaga(action) {
   try {
     yield call(removeItemApi, action.payload);
     yield put(removeItemSuccess(action.payload));
+    yield put(fetchCartItemsRequest());
   } catch (error) {
     yield put(removeItemFailure(error.message || 'Failed to remove item'));
   }
@@ -96,6 +101,7 @@ function* updateQuantitySaga(action) {
     const { itemId, quantity } = action.payload;
     const response = yield call(updateQuantityApi, itemId, quantity);
     yield put(updateQuantitySuccess(response.data));
+    yield put(fetchCartItemsRequest());
   } catch (error) {
     yield put(updateQuantityFailure(error.message || 'Failed to update quantity'));
   }

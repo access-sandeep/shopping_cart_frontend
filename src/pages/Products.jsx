@@ -16,7 +16,7 @@ function Products() {
   const dispatch = useDispatch()
   const { products, isLoading, isError, message } = useSelector((state) => state.products)
   const { categories, isLoading: categoriesLoading, isError: categoriesError, message: categoriesMessage } = useSelector((state) => state.categories)
-  const { userDetails, isLoading: userIsLoading, isError: userError, message: userMessage } = useSelector((state) => state.cart)
+  const { userDetails } = useSelector((state) => state.cart)
 
   useEffect(() => {
     dispatch(fetchCategoriesRequest())
