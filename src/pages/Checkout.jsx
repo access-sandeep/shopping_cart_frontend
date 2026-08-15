@@ -11,6 +11,7 @@ import {
 import api from '../services/api'
 import './PageTheme.css'
 import './Checkout.css'
+import { get } from 'lodash'
 
 const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 
@@ -54,7 +55,10 @@ function CheckoutForm({ items, subtotal, formatCurrency }) {
       // Step 1: Ask backend to create a PaymentIntent and return clientSecret
       const { data } = await api.post('/payments/create-intent', {
         // Amount in smallest currency unit (paise for INR)
-        amount: Math.round(subtotal * 100),
+        user_id: get(JSON.parse(localStorage.getItem('user')), 'user_id', null),
+        shipping_address_id: get(JSON.parse(localStorage.getItem('user')), 'address.address_id', null),
+        coupon_id: null, // Optional: Add coupon_id if applicable
+        total_amount: Math.round(subtotal * 100),
         currency: 'inr',
       })
 
